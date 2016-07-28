@@ -1,8 +1,13 @@
 package in.codingninjas.myskedule;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -101,14 +106,47 @@ public class MySkedulemain extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        /*int id = item.getItemId()*/;
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+       /* if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
-        return super.onOptionsItemSelected(item);
+       switch (item.getItemId())
+       {
+           case R.id.action_5:
+               scheduleNotification(getNotification("5 second delay"), 5000);
+               return true;
+           case R.id.action_10:
+               scheduleNotification(getNotification("10 second delay"), 10000);
+               return true;
+           case R.id.action_30:
+               scheduleNotification(getNotification("30 second delay"), 30000);
+               return true;
+           default:
+               return super.onOptionsItemSelected(item);
+       }
+
+    }
+
+    private void scheduleNotification(Notification notification,int delay)
+    {
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime()+delay, pendingIntent);
+
+    }
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Scheduled Notification");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.drawable.ic_alarm_white_48dp);
+        return builder.build();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
