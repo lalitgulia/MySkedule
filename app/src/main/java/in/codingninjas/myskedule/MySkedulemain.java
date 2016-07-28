@@ -143,7 +143,7 @@ public class MySkedulemain extends AppCompatActivity
     }
     private Notification getNotification(String content) {
         Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Scheduled Notification");
+        builder.setContentTitle("Notification");
         builder.setContentText(content);
         builder.setSmallIcon(R.drawable.ic_alarm_white_48dp);
         return builder.build();
